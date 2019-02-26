@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
+import com.vpr.util.Constantes;
+
 public class BusActor extends Objeto {
 	// Atributos
 	
@@ -25,9 +27,9 @@ public class BusActor extends Objeto {
 		g.fillRect(x, y, 30, 15);*/
 		
 		Graphics2D g2d = (Graphics2D) g;
-		Rectangle r = new Rectangle(x, y, 30, 15);
+		Rectangle r = new Rectangle(x, y, Constantes.BUS_WIDTH, Constantes.BUS_HEIGHT);
 		
-		g2d.setColor(Color.RED);
+		g2d.setColor(Constantes.BUS_COLOR);
 		
 		//Lo dibujo
 		g2d.draw(r);

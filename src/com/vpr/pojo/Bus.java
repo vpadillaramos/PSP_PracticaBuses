@@ -27,9 +27,9 @@ public class Bus implements Serializable {
 	public Bus() {
 		bus = null;
 		velocidad = intRandom(Constantes.MIN_VELOCIDAD, Constantes.MAX_VELOCIDAD); // velocidad inicial
-		ruta = Constantes.INICIO_LINEA[intRandom(0, Constantes.INICIO_LINEA.length-1)];
-		x = Constantes.x;
-		y = Constantes.y; // ruta1
+		ruta = intRandom(0, Constantes.MAX_RUTAS);
+		x = Constantes.INICIO_RUTA[ruta][0];
+		y = Constantes.INICIO_RUTA[ruta][1];
 	}
 	
 	//Metodos
@@ -41,8 +41,9 @@ public class Bus implements Serializable {
 			System.out.println("Conexion establecida");
 			
 			//Registro el objeto
-			
+			System.out.print("Registrando objeto...");
 			bus = (BusInterfaz) reg.lookup(Constantes.NOMBRE_CLASE);
+			System.out.println("Registrado");
 			
 			
 			if(bus != null) {
@@ -61,7 +62,7 @@ public class Bus implements Serializable {
 				}while(true);*/
 				
 				linea = bus.notificarInicio(this);
-				System.out.printf("INICIO: Velocidad: %d. Posicion: %d\n", velocidad, x);
+				System.out.printf("INICIO: Ruta: %d, Velocidad: %d. Posicion: %d\n", ruta+1, velocidad, x);
 				
 				while(true) {
 					try {
