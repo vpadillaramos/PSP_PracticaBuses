@@ -25,9 +25,9 @@ public class Interfaz extends Canvas implements Runnable {
 		//Añado los objetos iniciales
 		//handler.addObjeto(new BusActor(30, Constantes.HEIGHT-90));
 		
-		handler.addObjeto(new ParadaActor(Constantes.INICIO_RUTA[0][0]+100, Constantes.INICIO_RUTA[0][1]-(Constantes.BUS_HEIGHT/2)));
-		handler.addObjeto(new ParadaActor(Constantes.INICIO_RUTA[1][0]+100, Constantes.INICIO_RUTA[1][1]-(Constantes.BUS_HEIGHT/2)));
-		handler.addObjeto(new ParadaActor(Constantes.INICIO_RUTA[2][0]+100, Constantes.INICIO_RUTA[2][1]-(Constantes.BUS_HEIGHT/2)));
+		//RUTA 1
+		handler.addObjeto(new ParadaActor(Constantes.PARADAS_RUTA1[0][0], Constantes.PARADAS_RUTA1[0][1])); //parada 1
+		handler.addObjeto(new ParadaActor(Constantes.PARADAS_RUTA1[1][0], Constantes.PARADAS_RUTA1[1][1])); //parada 2
 	}
 	
 	

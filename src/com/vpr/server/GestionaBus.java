@@ -23,6 +23,8 @@ public class GestionaBus implements BusInterfaz {
 	public void moverBus(Bus bus) throws RemoteException {
 		BusActor busActor = Server.busActores.get(bus.getLinea());
 		busActor.moverBus(bus.x, bus.y);
+		
+		if(bus.x >= )
 	}
 	
 }

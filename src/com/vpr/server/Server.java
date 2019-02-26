@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.vpr.grafico.BusActor;
 import com.vpr.grafico.Interfaz;
 import com.vpr.pojo.Bus;
+import com.vpr.pojo.Ruta;
 import com.vpr.util.Constantes;
 
 public class Server {
@@ -26,6 +27,7 @@ public class Server {
 	public static ConcurrentHashMap<Integer, Bus> busesIniciados;
 	public static ConcurrentHashMap<Integer, BusActor> busActores;
 	public GestionaBus gb;
+	private Ruta[] rutas = new Ruta[Constantes.MAX_RUTAS];
 	
 	//Constructor
 	public Server() {
@@ -33,6 +35,11 @@ public class Server {
 		reg = null;
 		busActores = new ConcurrentHashMap<>();
 		busesIniciados = new ConcurrentHashMap<>();
+		
+		//Inicializacion de las rutas
+		for(Ruta r : rutas) {
+			r = new Ruta();
+		}
 	}
 
 	//Metodos

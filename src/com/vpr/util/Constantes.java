@@ -10,11 +10,11 @@ public class Constantes {
 	///////////////////////////////
 	
 	// **Casa**
-	public static final String HOST = "localhost";
-	public static final int PORT = 5556;
+	/*public static final String HOST = "localhost";
+	public static final int PORT = 5556;*/
 	// **Clase**
-	/*public static String HOST = "";
-	public static int PORT = 5555;*/
+	public static String HOST = "192.168.34.139";
+	public static int PORT = 5555;
 	
 	
 	///////////////////////////////
@@ -63,7 +63,8 @@ public class Constantes {
 	// **Paradas y rutas**
 	// Ruta1
 	public static final int[][] PARADAS_RUTA1 = {
-			{INICIO_RUTA[0][0]+100, Constantes.INICIO_RUTA[0][1]-(Constantes.BUS_HEIGHT/2)}
+			{INICIO_RUTA[0][0]+100, Constantes.INICIO_RUTA[0][1]-(Constantes.BUS_HEIGHT/2)},
+			{INICIO_RUTA[0][0]+300, Constantes.INICIO_RUTA[0][1]-(Constantes.BUS_HEIGHT/2)}
 	};
 	
 	public static final int MAX_RUTAS = INICIO_RUTA.length-1;
