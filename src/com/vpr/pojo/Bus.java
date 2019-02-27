@@ -18,6 +18,9 @@ public class Bus implements Serializable {
 	public float velocidad; // metros/ssegundos
 	public int ruta;
 	public int siguienteParada;
+	public int[] tiempoSiguienteParada;
+	public int[] tiempoAntesDeParar; 
+	public boolean ida;
 	
 	//RMI
 	private Registry reg;
@@ -28,11 +31,12 @@ public class Bus implements Serializable {
 	//Constructor
 	public Bus() {
 		busInterfaz = null;
-		//velocidad = intRandom(Constantes.MIN_VELOCIDAD, Constantes.MAX_VELOCIDAD); // velocidad inicial
-		velocidad = 6.9f;
+		velocidad = Constantes.MIN_VELOCIDAD; // velocidad con la que arranca
 		
 		ruta = intRandom(0, Constantes.MAX_RUTAS-1);
 		posicion = new Vector2(Constantes.INICIO_RUTA[ruta].x, Constantes.INICIO_RUTA[ruta].y);
+		
+		ida = true;
 	}
 	
 	//Metodos
@@ -71,19 +75,46 @@ public class Bus implements Serializable {
 				while(true) {
 					try {
 						//Actualizo cada segundo
-						Thread.sleep(2000);
+						Thread.sleep(1000);
 						
 						if(busInterfaz.isBusParado(this)) {
 							System.out.printf("He parado [Parada %d]\n", siguienteParada+1);
 							Thread.sleep(3000);
-							siguienteParada++; // cambio la parada siguiente
+
+							// Si estoy en ida, ire sumando paradas hasta llegar a la ultima
+							if(ida) {
+								// Si es la ultima parada de la ruta
+								if(siguienteParada+1 == Constantes.PARADAS_RUTAS[ruta].length) {
+									ida = false;
+									siguienteParada--; // en cuanto llega al final pone como ruta la siguiente parada
+									System.out.println("Ida false");
+								}
+								else
+									siguienteParada++;
+							}
+							// Si estoy en vuelta, ire restando paradas hasta llegar a la primera
+							else {
+								if(siguienteParada == 0) {
+									ida = true;
+									siguienteParada++;
+								}
+								else 
+									siguienteParada--;
+							}
 						}
 						else {
-							int[] t = busInterfaz.tiempoEspera(this);
-							System.out.printf("Voy a %.2fm/s. [%dm]. %dmin\n", velocidad, posicion.x, t[0]);
-							
+							tiempoSiguienteParada = busInterfaz.tiempoEspera(this);
+							if(velocidad != 0) {
+								busInterfaz.moverBus(this);
+								tiempoAntesDeParar = tiempoSiguienteParada.clone();
+								System.out.printf("Voy a %.2fm/s. [%dm]. %dmin %ds\n", velocidad, posicion.x, tiempoSiguienteParada[0], tiempoSiguienteParada[1]);
+							}
+							else {
+								tiempoSiguienteParada = tiempoAntesDeParar.clone();
+								System.out.printf("Un semáforo. [%dm]. %dmin %ds\n", posicion.x, tiempoSiguienteParada[0], tiempoSiguienteParada[1]);
+								Thread.sleep(1000);
+							}
 							actualizarPosicion();
-							busInterfaz.moverBus(this);
 						}
 					} catch (InterruptedException e) {
 						e.printStackTrace();
@@ -100,9 +131,8 @@ public class Bus implements Serializable {
 	private void actualizarPosicion() {
 		//segun una velocidad aleatoria va cambiando
 		//de forma progresiva la posicion del bus
-		
-		//velocidad = intRandom(Constantes.MIN_VELOCIDAD, Constantes.MAX_VELOCIDAD);
-		velocidad = 6.9f;
+
+		velocidad = dameVelocidad();
 		posicion.x = posicion.x + Math.round(velocidad);
 	}
 	
@@ -112,9 +142,23 @@ public class Bus implements Serializable {
 		return String.valueOf(linea);
 	}
 	
-	private int intRandom(int min, int max) {
+	private int intRandom(float minimo, float maximo) {
 		Random num = new Random();
+		int min = Math.round(minimo);
+		int max = Math.round(maximo);
 		return (min + num.nextInt(max-min+1));
+	}
+	
+	private float dameVelocidad() {
+		float[] velocidadesPosibles = new float[10];
+		
+		float aux = intRandom(Constantes.MIN_VELOCIDAD, Constantes.MAX_VELOCIDAD)+new Random().nextFloat();
+		for(int i = 0; i < velocidadesPosibles.length; i++)
+			velocidadesPosibles[i] = aux;
+		velocidadesPosibles[0] = 0; // el bus puede pararse 
+		
+		//System.out.printf("velocidad posible: %.2f,return %.2f\n",velocidadesPosibles[1], a);
+		return velocidadesPosibles[intRandom(0,velocidadesPosibles.length-1)];
 	}
 	
 	/**

@@ -32,6 +32,7 @@ public class BusActor extends Objeto {
 		
 		g2d.setColor(Constantes.BUS_COLOR);
 		r.setLocation(posicion.x, posicion.y);
+		
 		//Lo dibujo
 		g2d.draw(r);
 		g2d.fill(r);

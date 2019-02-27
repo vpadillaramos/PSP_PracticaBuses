@@ -10,11 +10,11 @@ public class Constantes {
 	///////////////////////////////
 	
 	// **Casa**
-	public static final String HOST = "localhost";
-	public static final int PORT = 5556;
+	/*public static final String HOST = "localhost";
+	public static final int PORT = 5556;*/
 	// **Clase**
-	/*public static String HOST = "192.168.34.139";
-	public static int PORT = 5555;*/
+	public static String HOST = "192.168.34.139";
+	public static int PORT = 5555;
 	
 	
 	///////////////////////////////
@@ -23,8 +23,8 @@ public class Constantes {
 	
 	// **Buses**
 	public static final int MAX_BUSES = 10;
-	public static final int MAX_VELOCIDAD = 90; // km/h
-	public static final int MIN_VELOCIDAD = 80; // km/h
+	public static final float MAX_VELOCIDAD = 12.5f; // m/s
+	public static final float MIN_VELOCIDAD = 9.72f; // m/s
 	
 	// **RMI**
 	public static final String NOMBRE_CLASE = "GestionaBus";
@@ -39,8 +39,8 @@ public class Constantes {
 	
 	// Ventana
 	public static final Dimension DIMENSION = Toolkit.getDefaultToolkit().getScreenSize();
-	public static final int WIDTH = 980;
-	public static final int HEIGHT = 735;
+	public static final int WIDTH = 1180;  // 980
+	public static final int HEIGHT = 535; // 735
 	
 	// Bus
 	public static final Color BUS_COLOR = Color.RED;
@@ -66,17 +66,17 @@ public class Constantes {
 			// paradas de la ruta1
 			{
 				new Vector2(INICIO_RUTA[0].x +100, INICIO_RUTA[0].y - BUS_HEIGHT/2),
-				new Vector2(INICIO_RUTA[0].x +300, INICIO_RUTA[0].y - BUS_HEIGHT/2)
+				new Vector2(INICIO_RUTA[0].x +200, INICIO_RUTA[0].y - BUS_HEIGHT/2)
 			},
 			// paradas de la ruta2
 			{
 				new Vector2(INICIO_RUTA[1].x +100, INICIO_RUTA[1].y - BUS_HEIGHT/2),
-				new Vector2(INICIO_RUTA[1].x +300, INICIO_RUTA[1].y - BUS_HEIGHT/2)
+				new Vector2(INICIO_RUTA[1].x +200, INICIO_RUTA[1].y - BUS_HEIGHT/2)
 			},	
 			// paradas de la ruta3
 			{
 				new Vector2(INICIO_RUTA[2].x +100, INICIO_RUTA[2].y - BUS_HEIGHT/2),
-				new Vector2(INICIO_RUTA[2].x +300, INICIO_RUTA[2].y - BUS_HEIGHT/2)
+				new Vector2(INICIO_RUTA[2].x +200, INICIO_RUTA[2].y - BUS_HEIGHT/2)
 			}	
 	};
 	

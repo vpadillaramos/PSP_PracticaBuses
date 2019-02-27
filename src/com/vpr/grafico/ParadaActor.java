@@ -29,7 +29,6 @@ public class ParadaActor extends Objeto {
 		Graphics2D g2d = (Graphics2D) g;
 		
 		g2d.setColor(Constantes.PARADA_COLOR);
-		
 		//Dibujo la parada
 		g2d.draw(r);
 		g2d.fill(r);
@@ -37,14 +36,5 @@ public class ParadaActor extends Objeto {
 	
 	public boolean isBusParado(BusActor bus) {
 		return bus.posicion.x >= posicion.x?true:false;
-		/*if(r.intersects(bus.r)) {
-			System.out.println("Parado");
-			return true;
-		}
-		else {
-			System.out.println("No parado");
-			return false;
-		}*/
-		//return r.intersects(bus.r);
 	}
 }
