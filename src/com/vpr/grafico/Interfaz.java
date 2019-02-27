@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 
 import com.vpr.util.Constantes;
+import com.vpr.util.Vector2;
 
 public class Interfaz extends Canvas implements Runnable {
 	
@@ -13,21 +14,34 @@ public class Interfaz extends Canvas implements Runnable {
 	private static final long serialVersionUID = -2718677220860607195L;
 	private Thread thread;
 	private boolean running = false;
+	public ParadaActor[][] paradas = new ParadaActor[Constantes.PARADAS_RUTAS.length][Constantes.PARADAS_RUTAS[0].length];
 	
 	private Handler handler;
-	
-	
+
+
 	// Constructor
 	public Interfaz() {
 		handler = new Handler();
-		
-		
+
 		//Añado los objetos iniciales
-		//handler.addObjeto(new BusActor(30, Constantes.HEIGHT-90));
+		/*ParadaActor p = new ParadaActor(0, new Vector2(20, 20));
+		handler.addObjeto(p);
+		BusActor b = new BusActor(new Vector2(25,30));
+		handler.addObjeto(b);
 		
-		//RUTA 1
-		handler.addObjeto(new ParadaActor(Constantes.PARADAS_RUTA1[0][0], Constantes.PARADAS_RUTA1[0][1])); //parada 1
-		handler.addObjeto(new ParadaActor(Constantes.PARADAS_RUTA1[1][0], Constantes.PARADAS_RUTA1[1][1])); //parada 2
+		p.isBusParado(b);*/
+		
+		/*if(p.isBusParado(b)) {
+			System.out.println("Parado");
+		}
+		else {
+			System.out.println("No parado");
+		}*/
+		
+		// Añado todas las rutas
+		for(int i=0; i < Constantes.MAX_RUTAS; i++) {
+			addRuta(i, Constantes.PARADAS_RUTAS[i]);
+		}
 	}
 	
 	
@@ -115,9 +129,24 @@ public class Interfaz extends Canvas implements Runnable {
 	
 	
 	// Metodos para añadir objetos de forma externa
-	public BusActor addBus(int x, int y) {
-		BusActor bus = new BusActor(x, y);
+	public BusActor addBus(Vector2 posicion) {
+		BusActor bus = new BusActor(posicion);
 		handler.addObjeto(bus);
 		return bus;
 	}
+	
+	/**
+	 * Añade una ruta entera con sus paradas
+	 * @param paradas es de tipo Vector2[], que contiene las posiciones de las paradas
+	 */
+	private void addRuta(int idRuta, Vector2[] posicionesParadas) {
+		int i = 0;
+		for(Vector2 posicion : posicionesParadas) {
+			ParadaActor parada = new ParadaActor(i+1, posicion);
+			paradas[idRuta][i] = parada;
+			handler.addObjeto(parada);
+			i++;
+		}
+	}
+	
 }

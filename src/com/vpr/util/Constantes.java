@@ -10,11 +10,11 @@ public class Constantes {
 	///////////////////////////////
 	
 	// **Casa**
-	/*public static final String HOST = "localhost";
-	public static final int PORT = 5556;*/
+	public static final String HOST = "localhost";
+	public static final int PORT = 5556;
 	// **Clase**
-	public static String HOST = "192.168.34.139";
-	public static int PORT = 5555;
+	/*public static String HOST = "192.168.34.139";
+	public static int PORT = 5555;*/
 	
 	
 	///////////////////////////////
@@ -54,18 +54,31 @@ public class Constantes {
 	
 	// **Posiciones**
 	//Matriz que guarda la coordenada x (posicion 0) e y (posicion y) del inicio de cada ruta
-	public static final int[][] INICIO_RUTA = {
-			{30, HEIGHT-90},		// ruta1
-			{30, HEIGHT-180},		// ruta2
-			{30, HEIGHT-270}		// ruta3
+	public static final Vector2[] INICIO_RUTA = {
+			new Vector2(30, HEIGHT-90),		// ruta1
+			new Vector2(30, HEIGHT-180),	// ruta2
+			new Vector2(30, HEIGHT-270)		// ruta3
 	};
 	
 	// **Paradas y rutas**
-	// Ruta1
-	public static final int[][] PARADAS_RUTA1 = {
-			{INICIO_RUTA[0][0]+100, Constantes.INICIO_RUTA[0][1]-(Constantes.BUS_HEIGHT/2)},
-			{INICIO_RUTA[0][0]+300, Constantes.INICIO_RUTA[0][1]-(Constantes.BUS_HEIGHT/2)}
+	
+	public static final Vector2[][] PARADAS_RUTAS = {
+			// paradas de la ruta1
+			{
+				new Vector2(INICIO_RUTA[0].x +100, INICIO_RUTA[0].y - BUS_HEIGHT/2),
+				new Vector2(INICIO_RUTA[0].x +300, INICIO_RUTA[0].y - BUS_HEIGHT/2)
+			},
+			// paradas de la ruta2
+			{
+				new Vector2(INICIO_RUTA[1].x +100, INICIO_RUTA[1].y - BUS_HEIGHT/2),
+				new Vector2(INICIO_RUTA[1].x +300, INICIO_RUTA[1].y - BUS_HEIGHT/2)
+			},	
+			// paradas de la ruta3
+			{
+				new Vector2(INICIO_RUTA[2].x +100, INICIO_RUTA[2].y - BUS_HEIGHT/2),
+				new Vector2(INICIO_RUTA[2].x +300, INICIO_RUTA[2].y - BUS_HEIGHT/2)
+			}	
 	};
 	
-	public static final int MAX_RUTAS = INICIO_RUTA.length-1;
+	public static final int MAX_RUTAS = PARADAS_RUTAS.length;
 }

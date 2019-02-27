@@ -9,27 +9,30 @@ import java.util.Random;
 
 import com.vpr.util.BusInterfaz;
 import com.vpr.util.Constantes;
+import com.vpr.util.Vector2;
 
 public class Bus implements Serializable {
 	//Atributos
-	private int linea;
-	public int x, y;
-	private int velocidad; // km/h
-	private int ruta;
+	public int linea;
+	public Vector2 posicion; // metros
+	public float velocidad; // metros/ssegundos
+	public int ruta;
+	public int siguienteParada;
 	
 	//RMI
 	private Registry reg;
-	private BusInterfaz bus;
+	private BusInterfaz busInterfaz;
 	
 	
 	
 	//Constructor
 	public Bus() {
-		bus = null;
-		velocidad = intRandom(Constantes.MIN_VELOCIDAD, Constantes.MAX_VELOCIDAD); // velocidad inicial
-		ruta = intRandom(0, Constantes.MAX_RUTAS);
-		x = Constantes.INICIO_RUTA[ruta][0];
-		y = Constantes.INICIO_RUTA[ruta][1];
+		busInterfaz = null;
+		//velocidad = intRandom(Constantes.MIN_VELOCIDAD, Constantes.MAX_VELOCIDAD); // velocidad inicial
+		velocidad = 6.9f;
+		
+		ruta = intRandom(0, Constantes.MAX_RUTAS-1);
+		posicion = new Vector2(Constantes.INICIO_RUTA[ruta].x, Constantes.INICIO_RUTA[ruta].y);
 	}
 	
 	//Metodos
@@ -42,11 +45,11 @@ public class Bus implements Serializable {
 			
 			//Registro el objeto
 			System.out.print("Registrando objeto...");
-			bus = (BusInterfaz) reg.lookup(Constantes.NOMBRE_CLASE);
+			busInterfaz = (BusInterfaz) reg.lookup(Constantes.NOMBRE_CLASE);
 			System.out.println("Registrado");
 			
 			
-			if(bus != null) {
+			if(busInterfaz != null) {
 				
 				/*
 				//Recorrido del bus hasta terminar
@@ -61,25 +64,32 @@ public class Bus implements Serializable {
 					
 				}while(true);*/
 				
-				linea = bus.notificarInicio(this);
-				System.out.printf("INICIO: Ruta: %d, Velocidad: %d. Posicion: %d\n", ruta+1, velocidad, x);
+				linea = busInterfaz.notificarInicio(this);
+				System.out.printf("INICIO: Ruta: %d, Velocidad: %.2f. Posicion: %d\n", ruta+1, velocidad, posicion.x);
 				
+				siguienteParada = 0; // me dirijo a la primera parada
 				while(true) {
 					try {
 						//Actualizo cada segundo
 						Thread.sleep(2000);
-						actualizarPosicion();
-						System.out.printf("Voy a %dkm/h. [%dm]\n", velocidad, x);
-						bus.moverBus(this);
 						
+						if(busInterfaz.isBusParado(this)) {
+							System.out.printf("He parado [Parada %d]\n", siguienteParada+1);
+							Thread.sleep(3000);
+							siguienteParada++; // cambio la parada siguiente
+						}
+						else {
+							int[] t = busInterfaz.tiempoEspera(this);
+							System.out.printf("Voy a %.2fm/s. [%dm]. %dmin\n", velocidad, posicion.x, t[0]);
+							
+							actualizarPosicion();
+							busInterfaz.moverBus(this);
+						}
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 				}
-				
 			}
-			
-			
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		} catch (NotBoundException e) {
@@ -90,30 +100,11 @@ public class Bus implements Serializable {
 	private void actualizarPosicion() {
 		//segun una velocidad aleatoria va cambiando
 		//de forma progresiva la posicion del bus
-		velocidad = intRandom(Constantes.MIN_VELOCIDAD, Constantes.MAX_VELOCIDAD);
-		x = x + toMpS(velocidad/2);
+		
+		//velocidad = intRandom(Constantes.MIN_VELOCIDAD, Constantes.MAX_VELOCIDAD);
+		velocidad = 6.9f;
+		posicion.x = posicion.x + Math.round(velocidad);
 	}
-
-	public int getLinea() {
-		return linea;
-	}
-
-	public float getVelocidad() {
-		return velocidad;
-	}
-
-	public BusInterfaz getBus() {
-		return bus;
-	}
-
-	public void setLinea(int linea) {
-		this.linea = linea;
-	}
-
-	public void setVelocidad(int velocidad) {
-		this.velocidad = velocidad;
-	}
-	
 	
 
 	@Override
