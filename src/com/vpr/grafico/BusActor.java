@@ -1,8 +1,10 @@
 package com.vpr.grafico;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.util.Random;
 
 import com.vpr.util.Constantes;
 import com.vpr.util.Vector2;
@@ -10,11 +12,13 @@ import com.vpr.util.Vector2;
 public class BusActor extends Objeto {
 	// Atributos
 	public Rectangle r;
+	private Color color;
 	
 	// Constructor
 	public BusActor(Vector2 posicion) {
 		super(posicion);
-		r = new Rectangle(posicion.x, posicion.y, Constantes.BUS_WIDTH, Constantes.BUS_HEIGHT);
+		Random rand = new Random();
+		color = new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
 	}
 
 	@Override
@@ -30,9 +34,8 @@ public class BusActor extends Objeto {
 		Graphics2D g2d = (Graphics2D) g;
 		
 		
-		g2d.setColor(Constantes.BUS_COLOR);
-		r.setLocation(posicion.x, posicion.y);
-		
+		g2d.setColor(color);
+		r = new Rectangle(posicion.x, posicion.y, Constantes.BUS_WIDTH, Constantes.BUS_HEIGHT);
 		//Lo dibujo
 		g2d.draw(r);
 		g2d.fill(r);

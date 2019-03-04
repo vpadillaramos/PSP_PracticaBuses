@@ -18,6 +18,17 @@ public class Vector2 implements Serializable {
 	}
 	
 	// Metodos
+	/**
+	 * Analiza si un Vector2 está entre dos coordenadas x, ambas incluidas
+	 * @param x1 es la coordenada menor
+	 * @param x2 es la corrdenada mayor
+	 */
+	public boolean between(int x1, int x2) {
+		return x >= x1 && x <= x2?true:false;
+	}
 	
+	public Vector2 clone() {
+		return new Vector2(x, y);
+	}
 	
 }

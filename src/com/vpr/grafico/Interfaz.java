@@ -14,7 +14,7 @@ public class Interfaz extends Canvas implements Runnable {
 	private static final long serialVersionUID = -2718677220860607195L;
 	private Thread thread;
 	private boolean running = false;
-	public ParadaActor[][] paradas = new ParadaActor[Constantes.PARADAS_RUTAS.length][Constantes.PARADAS_RUTAS[0].length];
+	public ParadaActor[][] paradas = new ParadaActor[Constantes.PARADAS_RUTAS.length][];
 	
 	private Handler handler;
 
@@ -141,6 +141,7 @@ public class Interfaz extends Canvas implements Runnable {
 	 */
 	private void addRuta(int idRuta, Vector2[] posicionesParadas) {
 		int i = 0;
+		paradas[idRuta] = new ParadaActor[posicionesParadas.length];
 		for(Vector2 posicion : posicionesParadas) {
 			ParadaActor parada = new ParadaActor(i+1, posicion);
 			paradas[idRuta][i] = parada;

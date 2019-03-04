@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
+import com.vpr.pojo.Bus;
 import com.vpr.util.Constantes;
 import com.vpr.util.Vector2;
 
@@ -34,7 +35,17 @@ public class ParadaActor extends Objeto {
 		g2d.fill(r);
 	}
 	
-	public boolean isBusParado(BusActor bus) {
-		return bus.posicion.x >= posicion.x?true:false;
+	public boolean isBusParado(BusActor busActor, Bus bus) {
+		
+		// Si el bus esta en ida, la referencia para saber si ha parado es si parte izquierda
+		if(bus.ida && busActor.posicion.between(posicion.x, posicion.x + Constantes.PARADA_WIDTH))
+			return true;
+		// Si no, sera su parte derecha
+		else {
+			if(!bus.ida && new Vector2(busActor.posicion.x + Constantes.BUS_WIDTH, busActor.posicion.y).between(posicion.x, posicion.x + Constantes.PARADA_WIDTH))
+				return true;
+			else
+				return false;
+		}
 	}
 }

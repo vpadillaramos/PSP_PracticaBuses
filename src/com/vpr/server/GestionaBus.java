@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 
 import com.vpr.grafico.BusActor;
 import com.vpr.pojo.Bus;
+import com.vpr.pojo.Parada;
 import com.vpr.util.BusInterfaz;
 import com.vpr.util.Constantes;
 
@@ -30,8 +31,7 @@ public class GestionaBus implements BusInterfaz {
 		
 		BusActor busActor = Server.busActores.get(bus.linea);
 		// Si el bus esta parado
-		System.out.printf("SiguienteParada: %d, x_Parada: %d\n", bus.siguienteParada, Server.interfaz.paradas[bus.ruta][bus.siguienteParada].getPosicion().x);
-		if(Server.interfaz.paradas[bus.ruta][bus.siguienteParada].isBusParado(busActor)) 
+		if(Server.interfaz.paradas[bus.ruta][bus.siguienteParada].isBusParado(busActor, bus)) 
 			return true;
 		// Si el bus no esta en la parada lo muevo
 		else 
@@ -39,36 +39,70 @@ public class GestionaBus implements BusInterfaz {
 	}
 
 	@Override
-	public int[] tiempoEspera(Bus bus) throws RemoteException {
+	public int[] tiempoEspera(Bus bus, int numParada) throws RemoteException {
 		// Variables
 		double distancia; // distancia que hay entre el bus y la siguiente parada
 		double velocidad; // velocidad del bus
-		double tiempo; // tiempo en segundos que tardara el bus en llegar a la parada
-		int minutos = 0, segundos = 0; // tiempo pasado a minutos y segundos
+		double tiempo = 0; // tiempo en segundos que tardara el bus en llegar a la parada
 		
 		
 		velocidad = bus.velocidad;
 		
 		// si el bus no esta parado
 		if(velocidad > 0) {
-			distancia = Constantes.PARADAS_RUTAS[bus.ruta][bus.siguienteParada].x - bus.posicion.x;
-			
-			//System.out.printf("Distancia: %.2fm, Velocidad: %.2fm/s, Posicion: %dm\n", distancia, velocidad, bus.posicion.x);
+			distancia = Constantes.PARADAS_RUTAS[bus.ruta][numParada].x - bus.posicion.x;
 			tiempo = distancia / velocidad; // calculo el tiempo en segundos
-			
-			//Convierto el tiempo a horas y minutos
-			
-			// si el tiempo no llega a 60 segundos no paso a minutos
-			if(tiempo < 60) {
-				segundos = (int) Math.round(tiempo);
+			return convierteSegundos(tiempo).clone();
+		}
+		else{
+			return bus.tiempoAntesDeParar.clone();
+		}
+	}
+	
+	@Override
+	public void actualizarTiemposDeEspera(Bus bus) throws RemoteException {
+		for(int i = bus.siguienteParada; i < Server.rutas[bus.ruta].paradas.length; i++) {
+			int[] t = tiempoEspera(bus, i);
+			Server.actualizarTiempoBus(bus, i, t);
+		}
+	}
+
+	private int[] convierteSegundos(double tiempo) {
+		int minutos = 0, segundos = 0;
+		if(tiempo < 60) {
+			segundos = (int) Math.round(tiempo);
+		}
+		else {
+			minutos = (int) Math.round(tiempo/60);
+			segundos = (int) ((tiempo/60) - minutos) * 60;
+		}
+		int[] t = {minutos, segundos};
+		return t;
+	}
+
+	@Override
+	public void actualizarParadas(Bus bus) throws RemoteException {
+		if(bus.ida) {
+			for(int i = bus.siguienteParada; i < Server.rutas[bus.ruta].paradas.length; i++) {
+				//Server.rutas[bus.ruta].paradas[i].busesProximos.clear();
+				Server.rutas[bus.ruta].paradas[i].addBusProximo(bus.clone());
 			}
-			else {
-				minutos = (int) Math.round(tiempo/60);
-				segundos = (int) ((tiempo/60) - minutos) * 60;
+		}
+		else {
+			for(int i = bus.siguienteParada; i >= 0; i--) {
+				//Server.rutas[bus.ruta].paradas[i].busesProximos.clear();
+				Server.rutas[bus.ruta].paradas[i].addBusProximo(bus.clone());
 			}
 		}
 		
-		int[] t = {minutos, segundos};
-		return t.clone();
+		/*System.out.print("GESTIONA actualiza busesProximos Parada 0 -> ");
+		for(Bus b : Server.rutas[bus.ruta].paradas[0].busesProximos)
+			System.out.print(b+";");
+		System.out.println("");*/
+	}
+
+	@Override
+	public void removeBusProximo(Bus bus, int numParada) throws RemoteException {
+		Server.rutas[bus.ruta].paradas[numParada].removeBusProximo(bus.clone());
 	}
 }
