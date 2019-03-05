@@ -12,6 +12,7 @@ public class Constantes {
 	// **Casa**
 	public static final String HOST = "localhost";
 	public static final int PORT = 5556;
+	public static final int PORT_TCP = 5555;
 	// **Clase**
 	/*public static String HOST = "192.168.34.139";
 	public static int PORT = 5555;*/

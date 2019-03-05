@@ -10,23 +10,23 @@ import com.vpr.util.Constantes;
 
 public class GestionaBus implements BusInterfaz {
 	@Override
-	public int notificarInicio(Bus bus) throws RemoteException {
+	public synchronized int notificarInicio(Bus bus) throws RemoteException {
 		int id = Server.getIdBus();
 		bus.linea = id;
 		Server.busesIniciados.put(id, bus);
-		BusActor busActor = Server.interfaz.addBus(bus.posicion);
+		BusActor busActor = Server.interfaz.addBus(id, bus.posicion);
 		Server.busActores.put(id, busActor);
 		return id;
 	}
 
 	@Override
-	public void moverBus(Bus bus) throws RemoteException {
+	public synchronized void moverBus(Bus bus) throws RemoteException {
 		BusActor busActor = Server.busActores.get(bus.linea);
 		busActor.moverBus(bus.posicion);
 	}
 
 	@Override
-	public boolean isBusParado(Bus bus) throws RemoteException {
+	public synchronized boolean isBusParado(Bus bus) throws RemoteException {
 		// Compruebo si el bus se encuentra en la parada o no
 		
 		BusActor busActor = Server.busActores.get(bus.linea);
@@ -39,7 +39,7 @@ public class GestionaBus implements BusInterfaz {
 	}
 
 	@Override
-	public int[] tiempoEspera(Bus bus, int numParada) throws RemoteException {
+	public synchronized int[] tiempoEspera(Bus bus, int numParada) throws RemoteException {
 		// Variables
 		double distancia; // distancia que hay entre el bus y la siguiente parada
 		double velocidad; // velocidad del bus
@@ -60,14 +60,14 @@ public class GestionaBus implements BusInterfaz {
 	}
 	
 	@Override
-	public void actualizarTiemposDeEspera(Bus bus) throws RemoteException {
+	public synchronized void actualizarTiemposDeEspera(Bus bus) throws RemoteException {
 		for(int i = bus.siguienteParada; i < Server.rutas[bus.ruta].paradas.length; i++) {
 			int[] t = tiempoEspera(bus, i);
 			Server.actualizarTiempoBus(bus, i, t);
 		}
 	}
 
-	private int[] convierteSegundos(double tiempo) {
+	private synchronized int[] convierteSegundos(double tiempo) {
 		int minutos = 0, segundos = 0;
 		if(tiempo < 60) {
 			segundos = (int) Math.round(tiempo);
@@ -81,28 +81,21 @@ public class GestionaBus implements BusInterfaz {
 	}
 
 	@Override
-	public void actualizarParadas(Bus bus) throws RemoteException {
+	public synchronized void actualizarParadas(Bus bus) throws RemoteException {
 		if(bus.ida) {
 			for(int i = bus.siguienteParada; i < Server.rutas[bus.ruta].paradas.length; i++) {
-				//Server.rutas[bus.ruta].paradas[i].busesProximos.clear();
 				Server.rutas[bus.ruta].paradas[i].addBusProximo(bus.clone());
 			}
 		}
 		else {
 			for(int i = bus.siguienteParada; i >= 0; i--) {
-				//Server.rutas[bus.ruta].paradas[i].busesProximos.clear();
 				Server.rutas[bus.ruta].paradas[i].addBusProximo(bus.clone());
 			}
 		}
-		
-		/*System.out.print("GESTIONA actualiza busesProximos Parada 0 -> ");
-		for(Bus b : Server.rutas[bus.ruta].paradas[0].busesProximos)
-			System.out.print(b+";");
-		System.out.println("");*/
 	}
 
 	@Override
-	public void removeBusProximo(Bus bus, int numParada) throws RemoteException {
+	public synchronized void removeBusProximo(Bus bus, int numParada) throws RemoteException {
 		Server.rutas[bus.ruta].paradas[numParada].removeBusProximo(bus.clone());
 	}
 }

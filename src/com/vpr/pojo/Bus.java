@@ -13,13 +13,13 @@ import com.vpr.util.Vector2;
 
 public class Bus implements Serializable {
 	//Atributos
-	public int linea;
+	public int linea; // numero asignado a cada bus; no hay dos iguales
 	public Vector2 posicion; // metros
-	public float velocidad; // metros/ssegundos
-	public int ruta;
-	public int siguienteParada;
-	public int[] tiempoSiguienteParada;
-	public int[] tiempoAntesDeParar; 
+	public float velocidad; // metros/segundos
+	public int ruta; // ruta asignada a cada bus
+	public int siguienteParada; // numero de la siguiente parada a la que el bus se dirige
+	public int[] tiempoSiguienteParada; // tiempo que tardara en llegar a la siguiente parada
+	public int[] tiempoAntesDeParar; // el mismo tiempo que tiempoSiguienteParada; usado para guardarlo cuando el bus se para y tiene tiempo 0,0
 	public boolean ida; // si es true el bus esta en ida, si es false esta en vuelta
 
 	//RMI
@@ -29,15 +29,14 @@ public class Bus implements Serializable {
 
 	//Constructor
 	public Bus() {
-		posicion = new Vector2(Constantes.INICIO_RUTA[ruta].x, Constantes.INICIO_RUTA[ruta].y);
+		ruta = intRandom(0, Constantes.MAX_RUTAS-1); // inicia en una ruta aleatoria
+		posicion = new Vector2(Constantes.INICIO_RUTA[ruta].x, Constantes.INICIO_RUTA[ruta].y); // inicializo con el inicio correspondiente a la ruta
 		velocidad = Constantes.MIN_VELOCIDAD; // velocidad con la que arranca
-		//ruta = intRandom(0, Constantes.MAX_RUTAS-1);
-		ruta = 0;
-		siguienteParada = 0;
+		siguienteParada = 0; // el bus se dirige siempre a la primera parada
 		tiempoSiguienteParada = new int[2];
 		tiempoAntesDeParar = new int[2];
 		busInterfaz = null;
-		ida = true;
+		ida = true; // bus inicia en ida
 	}
 
 	//Metodos
@@ -55,10 +54,8 @@ public class Bus implements Serializable {
 
 
 			if(busInterfaz != null) {
-
 				linea = busInterfaz.notificarInicio(this);
 				System.out.printf("INICIO: Ruta: %d, Velocidad: %.2f. Posicion: %d\n", ruta+1, velocidad, posicion.x);
-
 				siguienteParada = 0; // me dirijo a la primera parada
 				ida = true;
 				// Añado el bus a la lista de busesProximos de todas las paradas por las que el bus pasara
@@ -80,12 +77,12 @@ public class Bus implements Serializable {
 						if(velocidad != 0) {
 							busInterfaz.moverBus(this);
 							tiempoAntesDeParar = tiempoSiguienteParada.clone();
-							/*System.out.printf("Voy a %.2fm/s. [%dm]. %dmin %ds\n", velocidad, posicion.x, 
-									Math.abs(tiempoSiguienteParada[0]), Math.abs(tiempoSiguienteParada[1]));*/
+							System.out.printf("Voy a %dkm/h. [%dm]. %dmin %ds\n", toKMpH(Math.round(velocidad)), posicion.x, 
+									Math.abs(tiempoSiguienteParada[0]), Math.abs(tiempoSiguienteParada[1]));
 						}
 						else {
 							tiempoSiguienteParada = tiempoAntesDeParar.clone();
-							//System.out.printf("Un semáforo. [%dm]. %dmin %ds\n", posicion.x, Math.abs(tiempoSiguienteParada[0]), Math.abs(tiempoSiguienteParada[1]));
+							System.out.printf("Un semáforo. [%dm]. %dmin %ds\n", posicion.x, Math.abs(tiempoSiguienteParada[0]), Math.abs(tiempoSiguienteParada[1]));
 							Thread.sleep(intRandom(1500, 2500));
 						}
 						
@@ -104,7 +101,10 @@ public class Bus implements Serializable {
 			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * Cambia la posicion del bus, teniendo en cuenta la ida o la vuelta
+	 */
 	private void actualizarPosicion() {
 		//segun una velocidad aleatoria va cambiando la posicion del bus
 
@@ -174,7 +174,11 @@ public class Bus implements Serializable {
 		int max = Math.round(maximo);
 		return (min + num.nextInt(max-min+1));
 	}
-
+	
+	/**
+	 * Calcula una velocidad. Tiene un 10% de devolver 0
+	 * @return float
+	 */
 	private float dameVelocidad() {
 		float[] velocidadesPosibles = new float[10];
 
@@ -296,7 +300,7 @@ public class Bus implements Serializable {
 	 * @param x
 	 * @return
 	 */
-	private int toKMpS(int x) {
+	private int toKMpH(int x) {
 		return Math.round(x*0.001f*3600);
 	}
 

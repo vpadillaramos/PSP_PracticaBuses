@@ -11,7 +11,7 @@ public class Parada implements Serializable {
 	public int numRuta;
 	public int numParada;
 	public Vector2 posicion;
-	public List<Bus> busesProximos;
+	public List<Bus> busesProximos; // buses que van a pasar por esta parada
 	
 	//Constructor
 	public Parada() {
@@ -38,9 +38,6 @@ public class Parada implements Serializable {
 	}
 	
 	public List<Bus> getBusesProximos(){
-		/*for(Bus b : busesProximos) {
-			System.out.println("Parada "+ numParada + ": "+b+", "+b.tiempoSiguienteParada[1]+"segundos");
-		}*/
 		return busesProximos;
 	}
 	
@@ -57,16 +54,20 @@ public class Parada implements Serializable {
 	}
 	
 	public void addBusProximo(Bus bus) {
+		// si el bus ya esta en la lista no lo añade
 		if(!busesProximos.contains(bus))
 			busesProximos.add(bus);
-		/*for(Bus b : busesProximos)
-			System.out.println(b);*/
 	}
 	
 	public void removeBusProximo(Bus bus) {
 		busesProximos.remove(bus);
 	}
 	
+	/**
+	 * Actualiza el tiempo que tardara el bus indicado en llegar a esta parada
+	 * @param numBus (int) es el numero del bus (linea)
+	 * @param tiempo (int[]) tiempo que tardara el bus en llegar a la parada
+	 */
 	public void actualizarTiempoBus(int numBus, int[] tiempo) {
 		
 		for(Bus b : busesProximos) {

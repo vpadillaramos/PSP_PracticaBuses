@@ -25,14 +25,22 @@ public class Ruta implements Serializable {
 		paradas[i] = p;
 	}
 	
+	/**
+	 * Actualiza el tiempo del bus que va a psar por la parada
+	 * @param numParada (int) parada por la que el bus va a pasar
+	 * @param numBus (int) es la linea del bus
+	 * @param tiempo (int[]) tiempo que tardara el bus en llegar
+	 */
 	public void actualizarTiempoBus(int numParada, int numBus, int[] tiempo) {
 		paradas[numParada].actualizarTiempoBus(numBus, tiempo);
 	}
 	
+	/**
+	 * 
+	 * @param numParada (int) parada referida
+	 * @return devuelve List<Bus> de los buses que van a pasar por la parada indicada
+	 */
 	public List<Bus> getBusesProximos(int numParada) {
-		/*for(Bus b : paradas[numParada].getBusesProximos()) {
-			System.out.println("Parada "+ numParada + ": "+b+", "+b.tiempoSiguienteParada[1]+"segundos");
-		}*/
 		return paradas[numParada].getBusesProximos();
 	}
 	

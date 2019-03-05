@@ -68,7 +68,7 @@ public class Vista extends JFrame implements ItemListener, ActionListener {
 		scrollPane.setBounds(234, 29, 245, 258);
 		getContentPane().add(scrollPane);
 		
-		listaParadas = new JList();
+		listaParadas = new JList<>();
 		scrollPane.setViewportView(listaParadas);
 		modelo = new DefaultListModel<>();
 		listaParadas.setModel(modelo);
@@ -98,12 +98,20 @@ public class Vista extends JFrame implements ItemListener, ActionListener {
 	public void mostrar() {
 		setVisible(true);
 	}
-
+	
+	/**
+	 * Rellena el JComboBox de rutas con las rutas recibidas del Server
+	 * @param rutas (Ruta[]) array con el que poblar el JComboBox
+	 */
 	public void poblarRutas(Ruta[] rutas) {
 		cbRutas.setModel(new DefaultComboBoxModel(rutas));
 		cbRutas.setSelectedIndex(0);
 	}
 	
+	/**
+	 * Rellena el JComboBox de paradas con las paradas recibidas del Server
+	 * @param paradas (Parada[]) array con el que poblar el JComboBox
+	 */
 	public void poblarParadas(Parada[] paradas) {
 		cbParadas.setModel(new DefaultComboBoxModel(paradas));
 		cbParadas.setSelectedIndex(0);
@@ -117,6 +125,10 @@ public class Vista extends JFrame implements ItemListener, ActionListener {
 		}
 	}
 	
+	/**
+	 * Actualiza la lista de los proximos buses
+	 * @param busesProximos (List<Bus>) son los proximos buses para mostrar en la lista
+	 */
 	private void refrescarLista(List<Bus> busesProximos) {
 		
 		lbNoHayDatos.setText("");
@@ -124,7 +136,6 @@ public class Vista extends JFrame implements ItemListener, ActionListener {
 		
 		modelo.removeAllElements();
 		if(!busesProximos.isEmpty()) {
-			//System.out.println(busesProximos.size());
 			for(Bus b : busesProximos) {
 				int minutos = Math.abs(b.tiempoSiguienteParada[0]);
 				int segundos = Math.abs(b.tiempoSiguienteParada[1]);

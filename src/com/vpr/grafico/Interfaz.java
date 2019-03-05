@@ -24,32 +24,20 @@ public class Interfaz extends Canvas implements Runnable {
 		handler = new Handler();
 
 		//Añado los objetos iniciales
-		/*ParadaActor p = new ParadaActor(0, new Vector2(20, 20));
-		handler.addObjeto(p);
-		BusActor b = new BusActor(new Vector2(25,30));
-		handler.addObjeto(b);
-		
-		p.isBusParado(b);*/
-		
-		/*if(p.isBusParado(b)) {
-			System.out.println("Parado");
-		}
-		else {
-			System.out.println("No parado");
-		}*/
-		
 		// Añado todas las rutas
 		for(int i=0; i < Constantes.MAX_RUTAS; i++) {
 			addRuta(i, Constantes.PARADAS_RUTAS[i]);
 		}
 	}
 	
-	
-	
 	// Metodos
 	
+	/**
+	 * Muestra la ventana de la interfaz
+	 * @return devuelve true para poner el flag del serverOpen en true
+	 */
 	public void mostrar() {
-		Ventana v = new Ventana("Buses", this, Constantes.WIDTH, Constantes.HEIGHT);
+		Ventana v = new Ventana("Mapa de paradas y buses", this, Constantes.WIDTH, Constantes.HEIGHT);
 		v.mostrar();
 	}
 	
@@ -128,9 +116,14 @@ public class Interfaz extends Canvas implements Runnable {
 	}
 	
 	
-	// Metodos para añadir objetos de forma externa
-	public BusActor addBus(Vector2 posicion) {
-		BusActor bus = new BusActor(posicion);
+	/**
+	 * Añade un objeto bus a la ventana de buses y paradas
+	 * @param linea (int) del bus
+	 * @param posicion (Vector2) del bus
+	 * @return
+	 */
+	public BusActor addBus(int linea, Vector2 posicion) {
+		BusActor bus = new BusActor(linea, posicion);
 		handler.addObjeto(bus);
 		return bus;
 	}
@@ -143,11 +136,10 @@ public class Interfaz extends Canvas implements Runnable {
 		int i = 0;
 		paradas[idRuta] = new ParadaActor[posicionesParadas.length];
 		for(Vector2 posicion : posicionesParadas) {
-			ParadaActor parada = new ParadaActor(i+1, posicion);
+			ParadaActor parada = new ParadaActor(i, posicion);
 			paradas[idRuta][i] = parada;
 			handler.addObjeto(parada);
 			i++;
 		}
 	}
-	
 }
