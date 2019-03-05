@@ -86,6 +86,6 @@ public class Parada implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Parada " + numParada;
+		return "Parada " + (numParada+1);
 	}
 }

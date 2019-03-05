@@ -37,10 +37,6 @@ public class Server {
 	 * RMI para bus
 	 */
 	
-	// Constantes
-	private final String F_PETICION = "src" + File.separator + "peti.txt";
-	private final String F_CLAVE = "src" + File.separator + "cla.txt";
-	
 	//Interfaz
 	public static Interfaz interfaz;
 	
@@ -60,13 +56,6 @@ public class Server {
 	private DatagramPacket recibo;
 	private DatagramPacket envio;
 	private byte[] buffer;
-	
-	// TCP
-	private ServerSocket sctServer;
-	private DataInputStream dis;
-	private DataOutputStream dos;
-	private InetSocketAddress addrTCP;
-	private GestionaTCP gtcp;
 	
 	//Constructor
 	public Server() {
@@ -97,21 +86,7 @@ public class Server {
 	}
 	
 	public void iniciarServer() {
-		// Abro el server en TCP
 		try {
-			sctServer = new ServerSocket();
-			addrTCP = new InetSocketAddress(Constantes.HOST, Constantes.PORT);
-			sctServer.bind(addrTCP);
-			System.out.println("Server iniciado");
-			gtcp = new GestionaTCP(sctServer);
-			gtcp.start();
-			
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
-		
-		/*try {
 			
 			reg = LocateRegistry.createRegistry(Constantes.PORT);
 			System.out.println("Registro creado");
@@ -139,78 +114,7 @@ public class Server {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}*/
-	}
-	
-	private void recibirPeticion() throws IOException {
-		
-		
-		// Acepto peticion
-		System.out.println("Esperando conexiones...");
-		Socket sctUsuario = sctServer.accept();
-		dis = new DataInputStream(sctUsuario.getInputStream());
-		System.out.println("Conexion aceptada");
-		
-		// Guardo los ficheros
-		recibirFichero(sctUsuario, F_PETICION);
-		System.out.println("Peticion recibida");
-		
-		/*recibirFichero(sctUsuario, F_CLAVE);
-		System.out.println("Clave recibida");*/
-		sctUsuario.close();
-		dis.close();
-		sctServer.close();
-		
-	}
-	
-	private void recibirPeticion2() throws IOException {
-		ServerSocket sctServer = new ServerSocket();
-		addrTCP = new InetSocketAddress(Constantes.HOST, Constantes.PORT);
-		sctServer.bind(addrTCP);
-		System.out.println("Server iniciado");
-		
-		// Acepto peticion
-		System.out.println("Esperando conexiones...");
-		Socket sctUsuario = sctServer.accept();
-		dis = new DataInputStream(sctUsuario.getInputStream());
-		System.out.println("Conexion aceptada");
-		
-		// Guardo los ficheros
-		/*recibirFichero(sctUsuario, F_PETICION);
-		System.out.println("Peticion recibida");*/
-		
-		recibirFichero(sctUsuario, F_CLAVE);
-		System.out.println("Clave recibida");
-		
-		sctUsuario.close();
-		dis.close();
-		sctServer.close();
-	}
-	
-	private void recibirFichero(Socket sctUsuario, String fichero) throws IOException {
-		// Recibo el tamano del fichero		
-		int tamanoFichero = dis.readInt();
-		System.out.println(fichero + " tamaño: " + tamanoFichero);
-		int read = 0;
-		int totalRead = 0;
-		int remaining = tamanoFichero;
-		
-		// Recibo el fichero
-		//DataInputStream dis = new DataInputStream(sctUsuario.getInputStream());
-		FileOutputStream fos = new FileOutputStream(fichero);
-		byte[] buffer = new byte[4096];
-		
-		while((read = dis.read(buffer, 0, Math.min(buffer.length, remaining))) > 0) {
-			totalRead += read;
-			remaining -= read;
-			fos.write(buffer, 0, read);
 		}
-		
-		fos.close();
-		
-		/*// Mandar confirmacion
-		dos.writeBoolean(true);
-		System.out.println("Confirmacion enviada");*/
 	}
 	
 	private synchronized void conexionUsuario() throws IOException {
@@ -239,10 +143,6 @@ public class Server {
 		recibo = new DatagramPacket(buffer, buffer.length);
 		sct.receive(recibo);
 		return Integer.parseInt(new String(recibo.getData()).trim());
-	}
-	
-	private synchronized void recibirPeticionEncriptada() {
-		
 	}
 	
 	private synchronized void enviarRutas() throws IOException {

@@ -143,7 +143,7 @@ public class Vista extends JFrame implements ItemListener, ActionListener {
 			}
 		}
 		else
-			lbNoHayDatos.setText("No hay datos para la parada " + paradaActual.numParada);
+			lbNoHayDatos.setText("No hay datos para la parada " + (paradaActual.numParada+1));
 	}
 
 	@Override

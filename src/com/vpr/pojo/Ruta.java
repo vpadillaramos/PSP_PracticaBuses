@@ -46,7 +46,7 @@ public class Ruta implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Ruta " + numRuta;
+		return "Ruta " + (numRuta+1);
 	}
 	
 }

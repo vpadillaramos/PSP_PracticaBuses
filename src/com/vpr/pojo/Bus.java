@@ -269,7 +269,7 @@ public class Bus implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Bus " + linea;
+		return "Bus " + (linea+1);
 	}
 	
 	@Override
